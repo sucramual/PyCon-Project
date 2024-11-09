@@ -46,5 +46,41 @@ def process_data():
     print(f"Training records: {len(train_df)}")
     print(f"Testing records: {len(test_df)}")
 
+# Method 1: Using scikit-learn (Recommended)
+def split_data_sklearn(df, test_size=0.2, random_state=42):
+    """
+    Split a DataFrame into train and test sets using scikit-learn.
+    
+    Parameters:
+    -----------
+    df : pandas.DataFrame
+        Input DataFrame to split
+    test_size : float, default=0.2
+        Proportion of the dataset to include in the test split
+    random_state : int, default=42
+        Random seed for reproducibility
+        
+    Returns:
+    --------
+    train_df : pandas.DataFrame
+        Training dataset
+    test_df : pandas.DataFrame
+        Test dataset
+    """
+    train_df, test_df = train_test_split(
+        df,
+        test_size=test_size,
+        random_state=random_state
+    )
+    
+    # Reset indices for both datasets
+    train_df = train_df.reset_index(drop=True)
+    test_df = test_df.reset_index(drop=True)
+    
+    print(f"Training set size: {len(train_df)} ({(1-test_size)*100}%)")
+    print(f"Test set size: {len(test_df)} ({test_size*100}%)")
+    
+    return train_df, test_df
+
 if __name__ == "__main__":
     process_data()
