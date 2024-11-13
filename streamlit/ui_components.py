@@ -59,18 +59,6 @@ def render_answer_sections(models: list, answers: dict) -> list:
         list: List of user selections for each model
     """
 
-    # Add custom CSS to maintain text color while preventing editing
-    st.markdown("""
-        <style>
-            .stTextArea textarea {
-                color: rgb(49, 51, 63) !important;
-                background-color: white !important;
-                font-size: 14px !important;
-                border: 1px solid rgba(49, 51, 63, 0.2) !important;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-
     # Create equal-width columns for side-by-side display
     cols = st.columns(len(models))
     user_selections = []
