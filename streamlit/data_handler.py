@@ -15,12 +15,12 @@ def load_data() -> Tuple[pd.DataFrame, Dict[str, pd.DataFrame]]:
     Uses st.cache_data to prevent reloading on every rerun.
     """
     try:
-        questions_df = pd.read_csv(path("testset_questions_only.csv"))
+        questions_df = pd.read_csv(path("testset_questions_chinese.csv"))
         model_answers = {
             'GPT-4o': pd.read_csv(path("gpt4o.csv")),
-            'Model-1': pd.read_csv(path("sm_1_qa.csv")),
-            'Model-2': pd.read_csv(path("sm_2_qa.csv")),
-            'Model-3': pd.read_csv(path("sm_3_qa.csv"))
+            'Qwen25-3B': pd.read_csv(path("Qwen25-3B.csv")),
+            'Qwen25-0.5B': pd.read_csv(path("Qwen25-05B.csv")),
+            'Qwen25-1.5B': pd.read_csv(path("Qwen25-15B.csv"))
         }
         return questions_df, model_answers
     except Exception as e:

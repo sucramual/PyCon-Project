@@ -8,7 +8,7 @@ PAGE_CONFIG = {
     "page_icon":"🀄️"
 }
 
-MODELS = ['GPT-4o', 'Model-1', 'Model-2', 'Model-3']
+MODELS = ['GPT-4o', 'Qwen25-3B', 'Qwen25-1.5B', 'Qwen25-0.5B']
 
 INITIAL_STATE = {
     'submitted': False,
