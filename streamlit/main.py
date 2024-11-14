@@ -12,7 +12,7 @@ from ui_components import (
     render_control_buttons
 )
 
-def main():
+def main():    
     # Configure page
     st.set_page_config(**PAGE_CONFIG)
     
@@ -33,7 +33,7 @@ def main():
     
     # Question selection
     selected_question = st.selectbox(
-        "Select a question:",
+        "喺下面揀條問題:",
         questions_df['question'].tolist(),
         index=None,
         placeholder="Choose a question..."
@@ -49,6 +49,7 @@ def main():
             st.session_state.current_order = list(answers.keys())
             random.shuffle(st.session_state.current_order)
             st.session_state.current_question = selected_question
+            st.session_state.submitted = False
 
         # Randomly assign positions to answers
         models = st.session_state.current_order
@@ -67,6 +68,15 @@ def main():
             st.session_state.submitted = True
             update_scores(models, user_selections)
             st.rerun()
+
+    # Add footer with some spacing
+    st.markdown("""
+        <div style='color: #666; padding: 0px;'>
+        Demo Made For PyCon 2024 | © 2024
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
 
 if __name__ == "__main__":
     main()

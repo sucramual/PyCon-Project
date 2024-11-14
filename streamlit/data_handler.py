@@ -6,7 +6,7 @@ from typing import Tuple, Dict
 from pathlib import Path
 
 def path(file):
-    return Path(__file__).resolve().parent.parent / file
+    return Path(__file__).resolve().parent.parent / 'data' / 'q_and_a' / file
 
 @st.cache_data
 def load_data() -> Tuple[pd.DataFrame, Dict[str, pd.DataFrame]]:
@@ -17,7 +17,7 @@ def load_data() -> Tuple[pd.DataFrame, Dict[str, pd.DataFrame]]:
     try:
         questions_df = pd.read_csv(path("testset_questions_only.csv"))
         model_answers = {
-            'GPT-4o': pd.read_csv(path("gpt4o_qa.csv")),
+            'GPT-4o': pd.read_csv(path("gpt4o.csv")),
             'Model-1': pd.read_csv(path("sm_1_qa.csv")),
             'Model-2': pd.read_csv(path("sm_2_qa.csv")),
             'Model-3': pd.read_csv(path("sm_3_qa.csv"))

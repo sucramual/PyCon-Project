@@ -20,6 +20,31 @@ def render_metrics():
     total_guesses = st.session_state.total_attempts * len(MODELS)  # 4 guesses per round
     success_rate = (total_correct / total_guesses * 100) if total_guesses > 0 else 0
     
+    styles = """
+        <style>
+            .metrics-container {
+                padding: 10px;
+                border-radius: 5px;
+                margin-bottom: 15px;
+            }
+            .success-high {
+                background-color: rgba(144, 238, 144, 0.3);  /* light green with 0.3 opacity */
+            }
+            .success-low {
+                background-color: rgba(255, 182, 193, 0.3);  /* light red with 0.3 opacity */
+            }
+            .metric-value {
+                font-size: 30px;
+                font-weight: 500;
+            }
+            .metric-title {
+                margin-bottom: 8px;
+                font-size: 1.17em;
+                font-weight: bold;
+            }
+        </style>
+    """
+
     # Color the percentage based on value
     color = "green" if success_rate >= 50 else "red"
     
@@ -27,9 +52,10 @@ def render_metrics():
     with cols[0]:
         st.markdown(
             f"""
-            ### 成功率
-            <div style="font-size: 30px">
-            {total_correct}/{total_guesses} (<span style="color: {color}">{success_rate:.1f}%</span>)
+            <h3>成功率</h3>
+                <div style="font-size: 30px">
+                {total_correct}/{total_guesses} (<span style="color: {color}">{success_rate:.1f}%</span>)
+                </div>
             </div>
             """,
             unsafe_allow_html=True
@@ -39,7 +65,7 @@ def render_metrics():
     with cols[1]:
         st.markdown(
             f"""
-            ### 回合
+            <h3>回合</h3>
             <div style="font-size: 30px">
             {st.session_state.total_attempts}
             <div>
@@ -62,37 +88,45 @@ def render_answer_sections(models: list, answers: dict) -> list:
     # Create equal-width columns for side-by-side display
     cols = st.columns(len(models))
     user_selections = []
+
+    # Reset selections when new question is selected
+    if st.session_state.get('current_question') != st.session_state.get('last_question'):
+        for idx in range(len(models)):
+            if f'selection_{idx}' in st.session_state:
+                st.session_state[f'selection_{idx}'] = "請揀個模型..."  # Reset to default
+        st.session_state['last_question'] = st.session_state.get('current_question')
     
     # Render each answer in its own column
     for idx, (col, model) in enumerate(zip(cols, models)):
-        with col:
-            st.subheader(f"模型 {idx + 1}")
-            
-            # Answer text area
-            st.text_area(
-                "Answer",
-                answers[model],
-                height=200,
-                key=f"answer_{idx}",
-                label_visibility="collapsed",
-                disabled=True
-            )
-            
-            # Replace radio with selectbox
-            selection = st.selectbox(
-                "選擇",
-                ["請揀個模型..."] + MODELS,  # Add default option
-                key=f"selection_{idx}",
-                disabled=st.session_state.submitted,
-            )
-            user_selections.append(selection)
-            
-            # Show result if submitted
-            if st.session_state.submitted:
-                if model == selection:
-                    st.success(f"你答啱喇! 呢個係{model}。")
-                else:
-                    st.error(f"哎吖，應該係{model}至啱！")
+            with col:
+                st.subheader(f"模型 {idx + 1}")
+                
+                with st.container():
+                    st.markdown("""
+                        <div style='background-color: white; 
+                            padding: 1rem; 
+                            border-radius: 0.5rem; 
+                            border: 1px solid #ddd;
+                            min-height: 350px;'>
+                            {}
+                        </div>
+                    """.format(answers[model]), unsafe_allow_html=True)
+                
+                selection = st.selectbox(
+                    "選擇",
+                    ["請揀個模型..."] + MODELS,
+                    key=f"selection_{idx}",
+                    disabled=st.session_state.submitted,
+                )
+
+                user_selections.append(selection)
+
+                # Show result if submitted
+                if st.session_state.submitted:
+                    if model == selection:
+                        st.success(f"你答啱喇! 呢個係{model}。")
+                    else:
+                        st.error(f"哎吖，應該係{model}至啱！")
     
     return user_selections
 

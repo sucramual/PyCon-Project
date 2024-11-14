@@ -1,6 +1,7 @@
 from openai import OpenAI
 import pandas as pd
 import time
+from datetime import datetime
 
 client = OpenAI()
 
@@ -44,6 +45,5 @@ for i, question in enumerate(qb_list):
 
 qa["Answers"] = answers
 
-from datetime import datetime
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 qa.to_csv(f"OpenAI_qa_{timestamp}.csv", index=False)
