@@ -1,7 +1,5 @@
 import json
-from pathlib import Path
 import file_source
-import csv
 
 def add_districts(data):
     # Known districts in Hong Kong
