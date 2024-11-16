@@ -65,8 +65,8 @@ The project includes comprehensive data processing pipeline:
 
 - GPT-4
 - Qwen-25-3B
-- Qwen-25-15B
-- Qwen-25-05B
+- Qwen-25-1.5B
+- Qwen-25-0.5B
 
 ## Contributing
 
