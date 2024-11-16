@@ -18,7 +18,7 @@ def render_header():
     st.title("廣東話LLM擂台大決鬥")
     st.markdown("""
         究竟Large Language Model識唔識講廣東話呢？識嘅話佢又係唔係9up呢？
-        我地準備幾個模型，分別係 **`GPT-4o`**, **`{model1}`**, **`{model2}`**, **`{model3}`** ，你又試下估下邊個答案係邊個model答？
+        我地準備幾個模型，分別係 **`GPT-4o`**, **`Qwen-25-3B`**, **`Qwen-25-1.5B`**, **`Qwen-25-0.5B`** ，你又試下估下邊個答案係邊個model答？
     """)
 
 def render_metrics():
