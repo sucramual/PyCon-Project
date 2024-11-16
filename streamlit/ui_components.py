@@ -3,6 +3,16 @@
 import streamlit as st
 from config import MODELS
 
+def initialize_session_state():
+    """Initialize session state variables"""
+    if 'scores' not in st.session_state:
+        st.session_state.scores = {model: 0 for model in MODELS}
+    
+    # Force reset scores if needed
+    if st.session_state.get('needs_reset', True):
+        st.session_state.scores = {model: 0 for model in MODELS}
+        st.session_state.needs_reset = False
+
 def render_header():
     """Render application header and description"""
     st.title("廣東話LLM擂台大決鬥")
@@ -19,31 +29,6 @@ def render_metrics():
     total_correct = sum(st.session_state.scores.values())
     total_guesses = st.session_state.total_attempts * len(MODELS)  # 4 guesses per round
     success_rate = (total_correct / total_guesses * 100) if total_guesses > 0 else 0
-    
-    styles = """
-        <style>
-            .metrics-container {
-                padding: 10px;
-                border-radius: 5px;
-                margin-bottom: 15px;
-            }
-            .success-high {
-                background-color: rgba(144, 238, 144, 0.3);  /* light green with 0.3 opacity */
-            }
-            .success-low {
-                background-color: rgba(255, 182, 193, 0.3);  /* light red with 0.3 opacity */
-            }
-            .metric-value {
-                font-size: 30px;
-                font-weight: 500;
-            }
-            .metric-title {
-                margin-bottom: 8px;
-                font-size: 1.17em;
-                font-weight: bold;
-            }
-        </style>
-    """
 
     # Color the percentage based on value
     color = "green" if success_rate >= 50 else "red"
@@ -84,6 +69,11 @@ def render_answer_sections(models: list, answers: dict) -> list:
     Returns:
         list: List of user selections for each model
     """
+
+    if st.session_state.get('reset_answers', False):
+        for idx in range(len(models)):
+            st.session_state[f'selection_{idx}'] = "請揀個模型..."
+        st.session_state.reset_answers = False
 
     # Create equal-width columns for side-by-side display
     cols = st.columns(len(models))
@@ -136,11 +126,18 @@ def render_control_buttons():
     
     with col1:
         if st.button(
-            "Reset",
+            "Reset Answers",
             type="secondary",
             disabled=not st.session_state.submitted
         ):
+            st.session_state.reset_answers = True
+            st.session_state.pick_random_question = True 
             st.session_state.submitted = False
+            st.rerun()
+        
+        if st.button("Reset Scores", key="reset_scores"):
+            st.session_state.scores = {model: 0 for model in MODELS}
+            st.session_state.total_attempts = 0
             st.rerun()
             
     with col3:

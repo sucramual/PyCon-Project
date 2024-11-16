@@ -31,11 +31,19 @@ def main():
     # Add some spacing
     st.markdown("---")
     
-    # Question selection
+    # Question selection with random pick handling
+    questions = questions_df['question'].tolist()
+    
+    # Handle random question selection
+    if st.session_state.get('pick_random_question', False):
+        random_idx = random.randint(0, len(questions) - 1)
+        st.session_state.selected_index = random_idx
+        st.session_state.pick_random_question = False
+    
     selected_question = st.selectbox(
         "喺下面揀條問題:",
-        questions_df['question'].tolist(),
-        index=None,
+        questions,
+        index=st.session_state.get('selected_index', None),
         placeholder="Choose a question..."
     )
     
